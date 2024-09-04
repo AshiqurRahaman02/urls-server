@@ -2,9 +2,10 @@ const Url = require("../models/Url");
 const validateUrl = require("../utils/validateUrl");
 const generateUniqueId = require("../utils/generateUniqueId");
 
- const createShortUrl = async (req, res) => {
+const createShortUrl = async (req, res) => {
 	const { url } = req.body;
 	const clientUrl = process.env.BASE_URL;
+	console.log(url);
 
 	// checking if the url is valid or not
 	if (!validateUrl(url)) {
@@ -15,12 +16,6 @@ const generateUniqueId = require("../utils/generateUniqueId");
 	try {
 		const userId = req.user?._id;
 
-		if (!userId) {
-			return res.status(500).json({
-				isError: true,
-				message: "Internal Server Error",
-			});
-		}
 		// checking if original url is already present
 		const urlDoc = await Url.findOne({ url });
 		if (urlDoc) {
@@ -49,8 +44,7 @@ const generateUniqueId = require("../utils/generateUniqueId");
 	}
 };
 
-
- const redirectToOriginalUrl = async (req, res) => {
+const redirectToOriginalUrl = async (req, res) => {
 	const { shortUrlId } = req.params;
 
 	try {
@@ -71,7 +65,7 @@ const generateUniqueId = require("../utils/generateUniqueId");
 	}
 };
 
- const deleteUrl = async (req, res) => {
+const deleteUrl = async (req, res) => {
 	const { url } = req.body;
 	try {
 		const deletedUrl = await Url.deleteOne({ url });
@@ -86,5 +80,4 @@ const generateUniqueId = require("../utils/generateUniqueId");
 	}
 };
 
-
-module.exports = {createShortUrl, redirectToOriginalUrl, deleteUrl}
+module.exports = { createShortUrl, redirectToOriginalUrl, deleteUrl };
